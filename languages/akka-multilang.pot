@@ -1,0 +1,40 @@
+# Copyright (C) 2025 Mediakooperativet, Äventyret
+# This file is distributed under the same license as the Akka Headless WP – Multilang plugin.
+msgid ""
+msgstr ""
+"Project-Id-Version: Akka Headless WP – Multilang 1.1.2\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/akka-headless-wp-multilang\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2025-11-11T09:16:17+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.11.0\n"
+"X-Domain: akka-multilang\n"
+
+#. Plugin Name of the plugin
+#: akka-headless-wp-multilang.php
+msgid "Akka Headless WP – Multilang"
+msgstr ""
+
+#. Plugin URI of the plugin
+#: akka-headless-wp-multilang.php
+msgid "https://github.com/aventyret/akka-wp/blob/main/plugins/akka-headless-wp-multilang"
+msgstr ""
+
+#. Description of the plugin
+#: akka-headless-wp-multilang.php
+msgid "Multilang plugin for Akka"
+msgstr ""
+
+#. Author of the plugin
+#: akka-headless-wp-multilang.php
+msgid "Mediakooperativet, Äventyret"
+msgstr ""
+
+#. Author URI of the plugin
+#: akka-headless-wp-multilang.php
+msgid "https://aventyret.com"
+msgstr ""
