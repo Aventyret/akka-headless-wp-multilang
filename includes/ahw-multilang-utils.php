@@ -17,6 +17,10 @@ class MultiLangUtils
     return apply_filters('ahw_multilang_taxonomies', ['category', 'post_tag']);
   }
 
+  public static function multilang_post_field_names() {
+    return apply_filters('ahw_multilang_post_field_names', []);
+  }
+
   public static function get_translation($post_id, $to_lang)
   {
     $url = null;
@@ -49,7 +53,7 @@ class MultiLangUtils
   {
     $current_blog_id = get_current_blog_id();
     $language_posts = [];
-    $language_posts_ids = get_post_meta($post_id, '_language_posts', true);
+    $language_posts_ids = get_post_meta($post_id, '_akka_language_posts', true);
     if (!$language_posts_ids) {
       $language_posts_ids = [];
     }
@@ -71,7 +75,7 @@ class MultiLangUtils
   {
     $current_blog_id = get_current_blog_id();
     $language_terms = [];
-    $language_term_ids = get_term_meta($term_id, '_language_terms', true);
+    $language_term_ids = get_term_meta($term_id, '_akka_language_terms', true);
     if (!$language_term_ids) {
       $language_term_ids = [];
     }

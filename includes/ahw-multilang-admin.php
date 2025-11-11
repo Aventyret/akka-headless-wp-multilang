@@ -104,7 +104,7 @@ class MultiLangAdmin
       );
     }
 
-    foreach (['category', 'venue', 'season', 'festival', 'concert_category', 'group', 'admin_tag'] as $taxonomy) {
+    foreach (MultiLangUtils::multilang_taxonomies() as $taxonomy) {
       add_filter('manage_edit-' . $taxonomy . '_columns', function ($defaults) {
         $defaults['akka_languages'] = __('Translations', 'akka-theme');
         return $defaults;
@@ -146,7 +146,7 @@ class MultiLangAdmin
       'post_author' => get_current_user_id(),
       'post_type' => $p->post_type,
       'meta_input' => [
-        '_language_posts' => [
+        '_akka_language_posts' => [
           $from_blog => $from_post_id,
         ],
       ],
@@ -162,15 +162,7 @@ class MultiLangAdmin
       //   ],
       // ];
     }
-    $terms = wp_get_post_terms($p->ID, [
-      'venue',
-      'concert_category',
-      'season',
-      'category',
-      'festival',
-      'group',
-      'admin_tag',
-    ]);
+    $terms = wp_get_post_terms($p->ID, MultiLangUtils::multilang_taxonomies());
     $terms = array_reduce(
       $terms,
       function ($taxonomy_terms, $term) use ($current_blog_id) {
@@ -224,14 +216,14 @@ class MultiLangAdmin
     $new_post_id = wp_insert_post($new_post);
 
     switch_to_blog($from_blog);
-    update_post_meta($from_post_id, '_language_posts', [
+    update_post_meta($from_post_id, '_akka_language_posts', [
       $current_blog_id => $new_post_id,
     ]);
     switch_to_blog($current_blog_id);
 
     if (!empty($fields)) {
       foreach ($fields as $field_name => $field_value) {
-        if (in_array($field_name, ['works', 'participants']) && !empty($field_value)) {
+        if (in_array($field_name, [MultiLangUtils::multilang_post_field_names()]) && !empty($field_value)) {
           $field_value = array_map(function ($post_id) use ($from_blog) {
             return self::translate_post($from_blog, $post_id);
           }, $field_value);
@@ -260,11 +252,11 @@ class MultiLangAdmin
       ];
     }
     switch_to_blog($from_blog);
-    update_term_meta($from_term_id, '_language_terms', [
+    update_term_meta($from_term_id, '_akka_language_terms', [
       $current_blog_id => $new_term['term_id'],
     ]);
     switch_to_blog($current_blog_id);
-    update_term_meta($new_term['term_id'], '_language_terms', [
+    update_term_meta($new_term['term_id'], '_akka_language_terms', [
       $from_blog => $from_term_id,
     ]);
     return $new_term['term_id'];
