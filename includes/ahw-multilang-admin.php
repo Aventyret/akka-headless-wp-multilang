@@ -64,7 +64,7 @@ class MultiLangAdmin
       add_action('add_meta_boxes', function () use ($post_type, $blog_list) {
         add_meta_box(
           'akka_language',
-          __('Translations', 'akka-theme'),
+          __('Translations', 'akka-multilang'),
           function () use ($post_type, $blog_list) {
             global $post;
             if (!$post) {
@@ -87,7 +87,7 @@ class MultiLangAdmin
       });
 
       add_filter('manage_' . $post_type . '_posts_columns', function ($defaults) {
-        $defaults['akka_languages'] = __('Translations', 'akka-theme');
+        $defaults['akka_languages'] = __('Translations', 'akka-multilang');
         return $defaults;
       });
 
@@ -106,7 +106,7 @@ class MultiLangAdmin
 
     foreach (MultiLangUtils::multilang_taxonomies() as $taxonomy) {
       add_filter('manage_edit-' . $taxonomy . '_columns', function ($defaults) {
-        $defaults['akka_languages'] = __('Translations', 'akka-theme');
+        $defaults['akka_languages'] = __('Translations', 'akka-multilang');
         return $defaults;
       });
 

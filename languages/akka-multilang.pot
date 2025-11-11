@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-11-11T09:16:17+00:00\n"
+"POT-Creation-Date: 2025-11-11T09:45:07+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: akka-multilang\n"
@@ -37,4 +37,28 @@ msgstr ""
 #. Author URI of the plugin
 #: akka-headless-wp-multilang.php
 msgid "https://aventyret.com"
+msgstr ""
+
+#: includes/ahw-multilang-admin.php:67
+#: includes/ahw-multilang-admin.php:90
+#: includes/ahw-multilang-admin.php:109
+msgid "Translations"
+msgstr ""
+
+#: includes/ahw-multilang-utils.php:95
+msgid "This page"
+msgstr ""
+
+#: includes/ahw-multilang-utils.php:129
+#: includes/ahw-multilang-utils.php:197
+msgid "Create translation"
+msgstr ""
+
+#: includes/ahw-multilang-utils.php:150
+msgid "This term"
+msgstr ""
+
+#: includes/ahw-multilang-utils.php:174
+#: includes/ahw-multilang-utils.php:178
+msgid "Go to translation"
 msgstr ""

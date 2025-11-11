@@ -5,8 +5,8 @@ msgstr ""
 "Project-Id-Version: Akka Headless WP – Forms 1.0.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/akka-headless-wp-"
 "multilang\n"
-"POT-Creation-Date: 2025-11-11T09:16:17+00:00\n"
-"PO-Revision-Date: 2025-10-10 11:49+0200\n"
+"POT-Creation-Date: 2025-11-11T09:45:07+00:00\n"
+"PO-Revision-Date: 2025-11-11 10:46+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: sv_SE\n"
@@ -42,6 +42,27 @@ msgstr ""
 #: akka-headless-wp-multilang.php
 msgid "https://aventyret.com"
 msgstr ""
+
+#: includes/ahw-multilang-admin.php:67 includes/ahw-multilang-admin.php:90
+#: includes/ahw-multilang-admin.php:109
+msgid "Translations"
+msgstr "Översättningar"
+
+#: includes/ahw-multilang-utils.php:95
+msgid "This page"
+msgstr "Den här sidan"
+
+#: includes/ahw-multilang-utils.php:129 includes/ahw-multilang-utils.php:197
+msgid "Create translation"
+msgstr "Skapa översättning"
+
+#: includes/ahw-multilang-utils.php:150
+msgid "This term"
+msgstr "Den här termen"
+
+#: includes/ahw-multilang-utils.php:174 includes/ahw-multilang-utils.php:178
+msgid "Go to translation"
+msgstr "Till översättningen"
 
 #~ msgid "Form"
 #~ msgstr "Formulär"

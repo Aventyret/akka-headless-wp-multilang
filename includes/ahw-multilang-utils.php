@@ -92,7 +92,7 @@ class MultiLangUtils
           '<div style="display:flex;align-items:center;gap:6px;font-size:0.85em;">' .
           self::blog_icon($blog) .
           ' ' .
-          __('This page', 'akka-theme') .
+          __('This page', 'akka-multilang') .
           '</div>';
       }
     }
@@ -126,7 +126,7 @@ class MultiLangUtils
             '">' .
             self::blog_icon($blog) .
             ' ' .
-            __('Create translation', 'akka-theme') .
+            __('Create translation', 'akka-multilang') .
             '</a>';
         }
       }
@@ -147,7 +147,7 @@ class MultiLangUtils
           '<div style="display:flex;align-items:center;gap:6px;font-size:0.85em;">' .
           self::blog_icon($blog) .
           ' ' .
-          __('This term', 'akka-theme') .
+          __('This term', 'akka-multilang') .
           '</div>';
       }
     }
@@ -171,11 +171,11 @@ class MultiLangUtils
             '&post_type=' .
             resolvers::resolve_field($_GET, 'post_type') .
             '&action=edit" title="' .
-            __('Go to translation', 'akka-theme') .
+            __('Go to translation', 'akka-multilang') .
             '">' .
             self::blog_icon($blog) .
             ' ' .
-            __('Go to translation', 'akka-theme') .
+            __('Go to translation', 'akka-multilang') .
             '</a>';
         } else {
           $term_translations .=
@@ -194,7 +194,7 @@ class MultiLangUtils
             '">' .
             self::blog_icon($blog) .
             ' ' .
-            __('Create translation', 'akka-theme') .
+            __('Create translation', 'akka-multilang') .
             '</a>';
         }
       }
