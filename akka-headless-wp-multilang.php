@@ -22,6 +22,6 @@ define('AKKA_HEADLESS_WP_MULTILANG_DIR', plugin_dir_path( __FILE__ ));
 define('AKKA_HEADLESS_WP_MULTILANG_URI', plugin_dir_url( __FILE__ ));
 define('AKKA_HEADLESS_WP_MULTILANG_VER', "1.1.2");
 
-require_once(AKKA_HEADLESS_WP_MULTILANG_DIR . 'includes/ahw-multilang-admin.php');
 require_once(AKKA_HEADLESS_WP_MULTILANG_DIR . 'includes/ahw-multilang-utils.php');
+require_once(AKKA_HEADLESS_WP_MULTILANG_DIR . 'includes/ahw-multilang-admin.php');
 require_once(AKKA_HEADLESS_WP_MULTILANG_DIR . 'public/ahw-multilang-hooks.php');

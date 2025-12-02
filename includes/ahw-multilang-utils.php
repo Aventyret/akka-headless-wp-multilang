@@ -10,7 +10,9 @@ class MultiLangUtils
   static $blog_taxonomy_terms = [];
 
   public static function multilang_post_types() {
-    return apply_filters('ahw_multilang_post_types', ['post', 'page']);
+    $post_types = apply_filters('ahw_multilang_post_types', ['post', 'page']);
+
+    return $post_types;
   }
 
   public static function multilang_taxonomies() {
@@ -19,6 +21,10 @@ class MultiLangUtils
 
   public static function multilang_post_field_names() {
     return apply_filters('ahw_multilang_post_field_names', []);
+  }
+
+  public static function is_media_library_synced() {
+    return is_plugin_active('network-media-library/network-media-library.php');
   }
 
   public static function get_translation($post_id, $to_lang)
@@ -245,4 +251,5 @@ class MultiLangUtils
 </clipPath>
 </defs>
 </svg>';
+  }
 }

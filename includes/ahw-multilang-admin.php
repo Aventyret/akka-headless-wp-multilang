@@ -74,7 +74,7 @@ class MultiLangAdmin
   <div class="components-base-control">
     <div class="components-base-control__field">
       ' .
-              self::post_translations($post->ID, $post_type, $blog_list) .
+              MultiLangUtils::post_translations($post->ID, $post_type, $blog_list) .
               '
     </div>
   </div>
@@ -97,7 +97,7 @@ class MultiLangAdmin
           if ($column_name != 'akka_languages') {
             return;
           }
-          echo self::post_translations($post_id, $post_type, $blog_list);
+          echo MultiLangUtils::post_translations($post_id, $post_type, $blog_list);
         },
         10,
         2
@@ -116,7 +116,7 @@ class MultiLangAdmin
           if ($column_name != 'akka_languages') {
             return;
           }
-          echo self::term_translations($term_id, $taxonomy, $blog_list);
+          echo MultiLangUtils::term_translations($term_id, $taxonomy, $blog_list);
         },
         10,
         3
@@ -129,14 +129,11 @@ class MultiLangAdmin
     $current_blog_id = get_current_blog_id();
     switch_to_blog($from_blog);
     // Check for existing translation
-    $existing_translations = self::get_language_posts($from_post_id);
+    $existing_translations = MultiLangUtils::get_language_posts($from_post_id);
     if (Resolvers::resolve_field($existing_translations, $current_blog_id)) {
       switch_to_blog($current_blog_id);
       return $existing_translations[$current_blog_id]->ID;
     }
-    // TODO: Copy images in blocks (section-block, cover-block, image-slider-block, core/image)
-    // TODO: Copy media in block (audio-player-block)
-    // TODO: Copy videos and image in acf
     $p = get_post($from_post_id);
     $new_post = [
       'post_title' => $p->post_title,
@@ -151,17 +148,13 @@ class MultiLangAdmin
         ],
       ],
     ];
-    $medias = [];
+    // TEMP: Remove images in image blocks
+    $new_post['post_content'] = self::remove_images_from_blocks($new_post['post_content']);
+    // TODO: Copy images in blocks (section-block, cover-block, image-slider-block, core/image)
+    // TODO: Copy media in block (audio-player-block)
+    // TODO: Copy videos and image in acf
     $thumnail_image_id = get_post_thumbnail_id($p->ID);
-    if ($thumnail_image_id) {
-      // $medias[] = [
-      //   'post' => get_post($thumnail_image_id),
-      //   'meta' => [
-      //     '_wp_attached_file' => get_post_meta($thumnail_image_id, '_wp_attached_file', true),
-      //     '_wp_attachment_metadata' => get_post_meta($thumnail_image_id, '_wp_attachment_metadata', true),
-      //   ],
-      // ];
-    }
+    $fields = get_fields($from_post_id);
     $terms = wp_get_post_terms($p->ID, MultiLangUtils::multilang_taxonomies());
     $terms = array_reduce(
       $terms,
@@ -180,21 +173,12 @@ class MultiLangAdmin
       },
       []
     );
-    $fields = get_fields($from_post_id);
     switch_to_blog($current_blog_id);
-    // NOTE: This is not needed when media libraries are synced between langs
-    // $new_media = [];
-    // foreach ($medias as $media) {
-    //   $new_media[$media['post']->ID] = self::get_and_ensure_media_id($media);
-    // }
-    if ($thumnail_image_id) {
+    // TODO: translate featured images when media library is not synced
+    if ($thumnail_image_id && MultiLangUtils::is_media_library_synced()) {
       $new_post['meta_input'] = array_merge($new_post['meta_input'], [
         '_thumbnail_id' => $thumnail_image_id,
       ]);
-      // NOTE: This is not needed when media libraries are synced between langs
-      // $new_post['meta_input'] = array_merge($new_post['meta_input'], [
-      //   '_thumbnail_id' => $new_media[$thumnail_image_id],
-      // ]);
     }
     if (!empty($terms)) {
       $new_post['tax_input'] = [];
@@ -224,6 +208,7 @@ class MultiLangAdmin
     if (!empty($fields)) {
       foreach ($fields as $field_name => $field_value) {
         if (in_array($field_name, [MultiLangUtils::multilang_post_field_names()]) && !empty($field_value)) {
+          $return_format_is_id = true;
           $field_value = array_map(function ($post_id) use ($from_blog) {
             return self::translate_post($from_blog, $post_id);
           }, $field_value);
@@ -260,6 +245,28 @@ class MultiLangAdmin
       $from_blog => $from_term_id,
     ]);
     return $new_term['term_id'];
+  }
+
+  private static function remove_images_from_blocks($post_content) {
+    $block_key = '<!-- wp:image ';
+    if (strpos($post_content, $block_key) === false) {
+      return $post_content;
+    }
+    $new_post_content = '';
+
+    foreach(explode($block_key, $post_content) as $i => $part) {
+      if ($i == 0) {
+        $new_post_content .= $part;
+      } else if(str_starts_with($part, '-->')) {
+        $new_post_content .= $block_key . $part;
+      } else {
+        $new_post_content .= $block_key . '-->
+<figure class="wp-block-image"><img alt=""/></figure>
+<!-- /wp:image -->';
+      }
+    }
+
+    return $new_post_content;
   }
 }
 
