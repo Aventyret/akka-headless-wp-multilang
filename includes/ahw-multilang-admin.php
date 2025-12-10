@@ -15,7 +15,7 @@ class MultiLangAdmin
 
     $blog_list = get_sites();
 
-    add_action('admin_init', function () {
+    add_action('admin_init', function () use ($blog_list) {
       if (Utils::getQueryParam('akka_translate_blog') && Utils::getQueryParam('akka_translate_post')) {
         if (!current_user_can('edit_posts')) {
           return;
@@ -58,70 +58,70 @@ class MultiLangAdmin
           exit();
         }
       }
-    });
 
-    foreach (MultiLangUtils::multilang_post_types() as $post_type) {
-      add_action('add_meta_boxes', function () use ($post_type, $blog_list) {
-        add_meta_box(
-          'akka_language',
-          __('Translations', 'akka-multilang'),
-          function () use ($post_type, $blog_list) {
-            global $post;
-            if (!$post) {
+      foreach (MultiLangUtils::multilang_post_types() as $post_type) {
+        add_action('add_meta_boxes', function () use ($post_type, $blog_list) {
+          add_meta_box(
+            'akka_language',
+            __('Translations', 'akka-multilang'),
+            function () use ($post_type, $blog_list) {
+              global $post;
+              if (!$post) {
+                return;
+              }
+              echo '<div class="components-panel__row akka-ai-row">
+    <div class="components-base-control">
+      <div class="components-base-control__field">
+        ' .
+                MultiLangUtils::post_translations($post->ID, $post_type, $blog_list) .
+                '
+      </div>
+    </div>
+  </div>';
+            },
+            $post_type,
+            'side',
+            'high'
+          );
+        });
+
+        add_filter('manage_' . $post_type . '_posts_columns', function ($defaults) {
+          $defaults['akka_languages'] = __('Translations', 'akka-multilang');
+          return $defaults;
+        });
+
+        add_action(
+          'manage_' . $post_type . '_posts_custom_column',
+          function ($column_name, $post_id) use ($post_type, $blog_list) {
+            if ($column_name != 'akka_languages') {
               return;
             }
-            echo '<div class="components-panel__row akka-ai-row">
-  <div class="components-base-control">
-    <div class="components-base-control__field">
-      ' .
-              MultiLangUtils::post_translations($post->ID, $post_type, $blog_list) .
-              '
-    </div>
-  </div>
-</div>';
+            echo MultiLangUtils::post_translations($post_id, $post_type, $blog_list);
           },
-          $post_type,
-          'side',
-          'high'
+          10,
+          2
         );
-      });
+      }
 
-      add_filter('manage_' . $post_type . '_posts_columns', function ($defaults) {
-        $defaults['akka_languages'] = __('Translations', 'akka-multilang');
-        return $defaults;
-      });
+      foreach (MultiLangUtils::multilang_taxonomies() as $taxonomy) {
+        add_filter('manage_edit-' . $taxonomy . '_columns', function ($defaults) {
+          $defaults['akka_languages'] = __('Translations', 'akka-multilang');
+          return $defaults;
+        });
 
-      add_action(
-        'manage_' . $post_type . '_posts_custom_column',
-        function ($column_name, $post_id) use ($post_type, $blog_list) {
-          if ($column_name != 'akka_languages') {
-            return;
-          }
-          echo MultiLangUtils::post_translations($post_id, $post_type, $blog_list);
-        },
-        10,
-        2
-      );
-    }
-
-    foreach (MultiLangUtils::multilang_taxonomies() as $taxonomy) {
-      add_filter('manage_edit-' . $taxonomy . '_columns', function ($defaults) {
-        $defaults['akka_languages'] = __('Translations', 'akka-multilang');
-        return $defaults;
-      });
-
-      add_action(
-        'manage_' . $taxonomy . '_custom_column',
-        function ($content, $column_name, $term_id) use ($taxonomy, $blog_list) {
-          if ($column_name != 'akka_languages') {
-            return;
-          }
-          echo MultiLangUtils::term_translations($term_id, $taxonomy, $blog_list);
-        },
-        10,
-        3
-      );
-    }
+        add_action(
+          'manage_' . $taxonomy . '_custom_column',
+          function ($content, $column_name, $term_id) use ($taxonomy, $blog_list) {
+            if ($column_name != 'akka_languages') {
+              return;
+            }
+            echo MultiLangUtils::term_translations($term_id, $taxonomy, $blog_list);
+          },
+          10,
+          3
+        );
+      }
+    });
   }
 
   private static function translate_post($from_blog, $from_post_id)
