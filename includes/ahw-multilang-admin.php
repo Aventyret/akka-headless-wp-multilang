@@ -132,7 +132,7 @@ class MultiLangAdmin
     $existing_translations = MultiLangUtils::get_language_posts($from_post_id);
     if (Resolvers::resolve_field($existing_translations, $current_blog_id)) {
       switch_to_blog($current_blog_id);
-      return $existing_translations[$current_blog_id]->ID;
+      return $existing_translations[$current_blog_id]['post_id'];
     }
     $p = get_post($from_post_id);
     $new_post = [

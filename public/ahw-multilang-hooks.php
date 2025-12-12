@@ -17,6 +17,16 @@ add_action('rest_api_init', function () {
   ]);
 });
 
+add_filter('ahw_post_data', function ($post_data) {
+  if (in_array(Resolvers::resolve_field($post_data, 'post_type'), MultiLangUtils::multilang_post_types())) {
+    $post_data['translations'] = [];
+    foreach(MultiLangUtils::get_language_posts($post_data['post_id']) as $translation) {
+      $post_data['translations'][] = $translation;
+    }
+  }
+  return $post_data;
+});
+
 add_filter('network-media-library/post_types', function ($post_types) {
   return array_merge($post_types, MultiLangUtils::multilang_post_types());
 });

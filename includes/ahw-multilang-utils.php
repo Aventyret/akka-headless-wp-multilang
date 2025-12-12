@@ -37,10 +37,9 @@ class MultiLangUtils
       $language_posts = self::get_language_posts($post_id);
       if (Resolvers::resolve_field($language_posts, $to_blog)) {
         switch_to_blog($to_blog);
-        $translation_post = Content::get_akka_post($language_posts[$to_blog]);
-        if ($translation_post && $translation_post['post_status'] == 'publish') {
+        if ($translation_post && $language_posts[$to_blog]['post_status'] == 'publish') {
           return [
-            'url' => $translation_post['permalink'],
+            'url' => $translation_post['url'],
           ];
         }
       }
@@ -69,7 +68,15 @@ class MultiLangUtils
         $language_post_id = Resolvers::resolve_field($language_posts_ids, $blog->blog_id);
         if ($language_post_id) {
           switch_to_blog($blog->blog_id);
-          $language_posts[$blog->blog_id] = get_post($language_post_id);
+          $language_post = get_post($language_post_id);
+          $language_posts[$blog->blog_id] = [
+            'post_id' => $language_post->ID,
+            'post_title' => $language_post->post_title,
+            'url' => Utils::parseUrl(get_permalink($language_post->ID)),
+            'post_status' => $language_post->post_status,
+            'lang' => substr(get_locale(), 0, 2),
+            'locale' => get_locale(),
+          ];
           switch_to_blog($current_blog_id);
         }
       }
@@ -111,13 +118,13 @@ class MultiLangUtils
             '<a style="display:flex;align-items:center;gap:6px;font-size:0.85em;" href="' .
             $blog->path .
             'wp-admin/post.php?post=' .
-            $language_post->ID .
+            $language_post['post_id'] .
             '&action=edit" title="' .
-            $language_post->post_title .
+            $language_post['post_title'] .
             '">' .
             self::blog_icon($blog) .
             ' ' .
-            $language_post->post_title .
+            $language_post['post_title'] .
             '</a>';
         } else {
           $post_translations .=
