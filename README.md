@@ -59,3 +59,5 @@ add_filter('ahw_multilang_post_field_names', function($field_names) {
   ];
 });
 ```
+
+NOTE: The `ahw_multilang_post_field_names` only works with acf fields with type `post_object` and `return_format` id.

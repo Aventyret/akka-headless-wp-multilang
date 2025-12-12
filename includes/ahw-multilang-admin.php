@@ -208,10 +208,13 @@ class MultiLangAdmin
     if (!empty($fields)) {
       foreach ($fields as $field_name => $field_value) {
         if (in_array($field_name, [MultiLangUtils::multilang_post_field_names()]) && !empty($field_value)) {
-          $return_format_is_id = true;
-          $field_value = array_map(function ($post_id) use ($from_blog) {
-            return self::translate_post($from_blog, $post_id);
-          }, $field_value);
+          if (is_numeric($field_value)) {
+            $field_value = self::translate_post($from_blog, $field_value);
+          } else if (!empty($field_value) && isset($field_value[0]) && is_numeric($field_value[0])) {
+            $field_value = array_map(function ($post_id) use ($from_blog) {
+              return self::translate_post($from_blog, $post_id);
+            }, $field_value);
+          }
         }
         update_field($field_name, $field_value, $new_post_id);
       }
