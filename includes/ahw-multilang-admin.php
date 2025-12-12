@@ -148,15 +148,17 @@ class MultiLangAdmin
         ],
       ],
     ];
-    // TEMP: Remove images in image blocks
-    $new_post['post_content'] = self::remove_images_from_blocks($new_post['post_content']);
-    // TODO: Copy images in blocks (section-block, cover-block, image-slider-block, core/image)
-    // TODO: Copy media in block (audio-player-block)
-    // TODO: Copy videos and image in acf
+    if (!MultiLangUtils::is_media_library_synced()) {
+      // TEMP: Remove images in image blocks
+      $new_post['post_content'] = self::remove_images_from_blocks($new_post['post_content']);
+      // TODO: Copy images in blocks (section-block, cover-block, image-slider-block, core/image)
+      // TODO: Copy media in block (audio-player-block)
+      // TODO: Copy videos and image in acf
+    }
     $thumnail_image_id = get_post_thumbnail_id($p->ID);
     $fields = get_fields($from_post_id);
     $terms = wp_get_post_terms($p->ID, MultiLangUtils::multilang_taxonomies());
-    $terms = array_reduce(
+    $terms = !is_wp_error($terms) ? array_reduce(
       $terms,
       function ($taxonomy_terms, $term) use ($current_blog_id) {
         if (!isset($taxonomy_terms[$term->taxonomy])) {
@@ -172,7 +174,7 @@ class MultiLangAdmin
         return $taxonomy_terms;
       },
       []
-    );
+    ) : [];
     switch_to_blog($current_blog_id);
     // TODO: translate featured images when media library is not synced
     if ($thumnail_image_id && MultiLangUtils::is_media_library_synced()) {
@@ -197,6 +199,7 @@ class MultiLangAdmin
         }, $terms);
       }
     }
+
     $new_post_id = wp_insert_post($new_post);
 
     switch_to_blog($from_blog);
@@ -213,6 +216,24 @@ class MultiLangAdmin
           } else if (!empty($field_value) && isset($field_value[0]) && is_numeric($field_value[0])) {
             $field_value = array_map(function ($post_id) use ($from_blog) {
               return self::translate_post($from_blog, $post_id);
+            }, $field_value);
+          }
+        } else if(!empty($field_value) && isset($field_value[0]) && is_array($field_value[0])) {
+          // Check for translatable fields in repeater
+          $translatable_sub_fields = array_filter(array_keys($field_value[0]), function($sub_field) {
+            return in_array($sub_field, MultiLangUtils::multilang_post_field_names());
+          });
+          if (!empty($translatable_sub_fields)) {
+            $field_value = array_map(function($repeater_row) use($from_blog, $translatable_sub_fields) {
+              $new_field_value = [];
+              foreach($repeater_row as $sub_field_name => $sub_field_value) {
+                if (in_array($sub_field_name, MultiLangUtils::multilang_post_field_names()) && $sub_field_value && is_numeric($sub_field_value)) {
+                  $new_field_value[$sub_field_name] = self::translate_post($from_blog, $sub_field_value);
+                } else {
+                  $new_field_value[$sub_field_name] = $sub_field_value;
+                }
+              }
+              return $new_field_value;
             }, $field_value);
           }
         }
