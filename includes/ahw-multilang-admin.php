@@ -167,7 +167,7 @@ class MultiLangAdmin
           'new_term_id' =>
             $term->term_id == 1
               ? 1
-              : Resolvers::resolve_field(self::get_language_term_ids($term->term_id), $current_blog_id),
+              : Resolvers::resolve_field(MultiLangUtils::get_language_term_ids($term->term_id), $current_blog_id),
         ];
         return $taxonomy_terms;
       },
@@ -183,7 +183,7 @@ class MultiLangAdmin
     if (!empty($terms)) {
       $new_post['tax_input'] = [];
       foreach ($terms as $taxonomy => $terms) {
-        $taxonomy_terms = self::get_blog_taxonomy_term_ids($current_blog_id, $taxonomy);
+        $taxonomy_terms = MultiLangUtils::get_blog_taxonomy_term_ids($current_blog_id, $taxonomy);
         $new_post['tax_input'][$taxonomy] = array_map(function ($term_data) use (
           $from_blog,
           $taxonomy,
@@ -207,7 +207,7 @@ class MultiLangAdmin
 
     if (!empty($fields)) {
       foreach ($fields as $field_name => $field_value) {
-        if (in_array($field_name, [MultiLangUtils::multilang_post_field_names()]) && !empty($field_value)) {
+        if (in_array($field_name, MultiLangUtils::multilang_post_field_names()) && !empty($field_value)) {
           if (is_numeric($field_value)) {
             $field_value = self::translate_post($from_blog, $field_value);
           } else if (!empty($field_value) && isset($field_value[0]) && is_numeric($field_value[0])) {
