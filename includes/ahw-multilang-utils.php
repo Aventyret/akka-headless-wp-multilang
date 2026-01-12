@@ -37,9 +37,9 @@ class MultiLangUtils
       $language_posts = self::get_language_posts($post_id);
       if (Resolvers::resolve_field($language_posts, $to_blog)) {
         switch_to_blog($to_blog);
-        if ($translation_post && $language_posts[$to_blog]['post_status'] == 'publish') {
+        if ($language_posts[$to_blog]['post_status'] == 'publish') {
           return [
-            'url' => $translation_post['url'],
+            'url' => $language_posts[$to_blog]['url'],
           ];
         }
       }
