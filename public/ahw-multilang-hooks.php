@@ -9,7 +9,7 @@ add_action('rest_api_init', function () {
   register_rest_route(AKKA_API_BASE, '/multilang/translation', [
     'methods' => 'GET',
     'callback' => function () {
-      $to_lang = Utils::getQueryParam('to_lang', 'sv');
+      $to_lang = Utils::getQueryParam('lang', 'sv');
       $post_id = Utils::getQueryParam('post_id', null);
       return MultiLangUtils::get_translation($post_id, $to_lang);
     },
