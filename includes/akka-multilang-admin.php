@@ -1,9 +1,5 @@
 <?php
-namespace AkkaMultilang;
-
-use \Akka_headless_wp_resolvers as Resolvers;
-use \Akka_headless_wp_content as Content;
-use \Akka_headless_wp_utils as Utils;
+namespace Akka;
 
 class MultiLangAdmin
 {
@@ -16,14 +12,14 @@ class MultiLangAdmin
     $blog_list = get_sites();
 
     add_action('admin_init', function () use ($blog_list) {
-      if (Utils::getQueryParam('akka_translate_blog') && Utils::getQueryParam('akka_translate_post')) {
+      if (Utils::get_query_param('akka_translate_blog') && Utils::get_query_param('akka_translate_post')) {
         if (!current_user_can('edit_posts')) {
           return;
         }
 
         $new_post_id = self::translate_post(
-          Utils::getQueryParam('akka_translate_blog'),
-          Utils::getQueryParam('akka_translate_post')
+          Utils::get_query_param('akka_translate_blog'),
+          Utils::get_query_param('akka_translate_post')
         );
         if ($new_post_id) {
           wp_redirect(admin_url('post.php?post=' . $new_post_id . '&action=edit'));
@@ -31,28 +27,28 @@ class MultiLangAdmin
         }
       }
       if (
-        Utils::getQueryParam('akka_translate_blog') &&
-        Utils::getQueryParam('akka_translate_taxonomy') &&
-        Utils::getQueryParam('akka_translate_term')
+        Utils::get_query_param('akka_translate_blog') &&
+        Utils::get_query_param('akka_translate_taxonomy') &&
+        Utils::get_query_param('akka_translate_term')
       ) {
         if (!current_user_can('edit_posts')) {
           return;
         }
 
         $new_term_id = self::translate_term(
-          Utils::getQueryParam('akka_translate_blog'),
-          Utils::getQueryParam('akka_translate_taxonomy'),
-          Utils::getQueryParam('akka_translate_term')
+          Utils::get_query_param('akka_translate_blog'),
+          Utils::get_query_param('akka_translate_taxonomy'),
+          Utils::get_query_param('akka_translate_term')
         );
         if ($new_term_id) {
           wp_redirect(
             admin_url(
               'term.php?taxonomy=' .
-                Utils::getQueryParam('akka_translate_taxonomy') .
+                Utils::get_query_param('akka_translate_taxonomy') .
                 '&tag_ID=' .
                 $new_term_id .
                 '&post_type=' .
-                resolvers::resolve_field($_GET, 'post_type')
+                Resolvers::resolve_field($_GET, 'post_type')
             )
           );
           exit();

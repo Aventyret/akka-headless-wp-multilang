@@ -1,26 +1,22 @@
 <?php
-namespace AkkaMultilang;
-
-use \Akka_headless_wp_resolvers as Resolvers;
-use \Akka_headless_wp_content as Content;
-use \Akka_headless_wp_utils as Utils;
+namespace Akka;
 
 class MultiLangUtils
 {
   static $blog_taxonomy_terms = [];
 
   public static function multilang_post_types() {
-    $post_types = apply_filters('ahw_multilang_post_types', ['post', 'page']);
+    $post_types = apply_filters('akka_multilang_post_types', ['post', 'page']);
 
     return $post_types;
   }
 
   public static function multilang_taxonomies() {
-    return apply_filters('ahw_multilang_taxonomies', ['category', 'post_tag']);
+    return apply_filters('akka_multilang_taxonomies', ['category', 'post_tag']);
   }
 
   public static function multilang_post_field_names() {
-    return apply_filters('ahw_multilang_post_field_names', []);
+    return apply_filters('akka_multilang_post_field_names', []);
   }
 
   public static function is_media_library_synced() {
@@ -72,7 +68,7 @@ class MultiLangUtils
           $language_posts[$blog->blog_id] = [
             'post_id' => $language_post->ID,
             'post_title' => $language_post->post_title,
-            'url' => Utils::parseUrl(get_permalink($language_post->ID)),
+            'url' => Utils::parse_url(get_permalink($language_post->ID)),
             'post_status' => $language_post->post_status,
             'lang' => substr(get_locale(), 0, 2),
             'locale' => get_locale(),
@@ -182,7 +178,7 @@ class MultiLangUtils
             '&tag_ID=' .
             $language_term_id .
             '&post_type=' .
-            resolvers::resolve_field($_GET, 'post_type') .
+            Resolvers::resolve_field($_GET, 'post_type') .
             '&action=edit" title="' .
             __('Go to translation', 'akka-multilang') .
             '">' .
@@ -203,7 +199,7 @@ class MultiLangUtils
             '&akka_translate_term=' .
             $term_id .
             '&post_type=' .
-            resolvers::resolve_field($_GET, 'post_type') .
+            Resolvers::resolve_field($_GET, 'post_type') .
             '">' .
             self::blog_icon($blog) .
             ' ' .
