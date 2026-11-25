@@ -29,7 +29,7 @@ Activate the plugin in your wp admin.
 Configure what post types you want to have translatable:
 
 ```
-add_filter('ahw_multilang_post_types', function($post_types) {
+add_filter('akka_multilang_post_types', function($post_types) {
   return [
     'post',
     'page',
@@ -41,7 +41,7 @@ add_filter('ahw_multilang_post_types', function($post_types) {
 Configure what taxonomies you want to have translatable:
 
 ```
-add_filter('ahw_multilang_taxonomies', function($post_types) {
+add_filter('akka_multilang_taxonomies', function($post_types) {
   return [
     'category',
     'post_tag',
@@ -53,11 +53,11 @@ add_filter('ahw_multilang_taxonomies', function($post_types) {
 Configure what ACF field names that are posts that you want to have translatable:
 
 ```
-add_filter('ahw_multilang_post_field_names', function($field_names) {
+add_filter('akka_multilang_post_field_names', function($field_names) {
   return [
     'related_post'
   ];
 });
 ```
 
-NOTE: The `ahw_multilang_post_field_names` only works with acf fields with type `post_object` and `return_format` id.
+NOTE: The `akka_multilang_post_field_names` only works with acf fields with type `post_object` and `return_format` id.

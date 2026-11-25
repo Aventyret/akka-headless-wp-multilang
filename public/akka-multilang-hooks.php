@@ -1,23 +1,19 @@
 <?php
-namespace AkkaMultilang;
-
-use \Akka_headless_wp_resolvers as Resolvers;
-use \Akka_headless_wp_content as Content;
-use \Akka_headless_wp_utils as Utils;
+namespace Akka;
 
 add_action('rest_api_init', function () {
   register_rest_route(AKKA_API_BASE, '/multilang/translation', [
     'methods' => 'GET',
     'callback' => function () {
-      $to_lang = Utils::getQueryParam('lang', 'sv');
-      $post_id = Utils::getQueryParam('post_id', null);
+      $to_lang = Utils::get_query_param('lang', 'sv');
+      $post_id = Utils::get_query_param('post_id', null);
       return MultiLangUtils::get_translation($post_id, $to_lang);
     },
-    'permission_callback' => 'Akka_headless_wp_content::can_get_content',
+    'permission_callback' => 'Akka\Router::require_proxy_header',
   ]);
 });
 
-add_filter('ahw_post_data', function ($post_data) {
+add_filter('akka_post_single', function ($post_data) {
   if (in_array(Resolvers::resolve_field($post_data, 'post_type'), MultiLangUtils::multilang_post_types())) {
     $post_data['translations'] = [];
     foreach(MultiLangUtils::get_language_posts($post_data['post_id']) as $translation) {
